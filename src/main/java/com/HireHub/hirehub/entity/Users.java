@@ -5,10 +5,10 @@ import jakarta.validation.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-
 @Entity
 @Table(name = "users")
 public class Users {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
@@ -19,27 +19,26 @@ public class Users {
     @NotEmpty
     private String password;
 
-    @Column(name = "is_active")
     private boolean isActive;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
-    @Column(name = "registration_date")
     private Date registrationDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_type_id", referencedColumnName = "user_type_id")
-    private UsersType usersType;
+    @JoinColumn(name = "userTypeId", referencedColumnName = "userTypeId")
+    private UsersType userTypeId;
 
-    public Users(int userId, String email, String password, boolean isActive, Date registrationDate, UsersType usersType) {
+    public Users() {
+    }
+
+    public Users(int userId, String email, String password, boolean isActive, Date registrationDate, UsersType userTypeId) {
         this.userId = userId;
         this.email = email;
         this.password = password;
         this.isActive = isActive;
         this.registrationDate = registrationDate;
-        this.usersType = usersType;
+        this.userTypeId = userTypeId;
     }
-
-    public Users(){}
 
     public int getUserId() {
         return userId;
@@ -81,12 +80,12 @@ public class Users {
         this.registrationDate = registrationDate;
     }
 
-    public UsersType getUsersType() {
-        return usersType;
+    public UsersType getUserTypeId() {
+        return userTypeId;
     }
 
-    public void setUsersType(UsersType usersType) {
-        this.usersType = usersType;
+    public void setUserTypeId(UsersType userTypeId) {
+        this.userTypeId = userTypeId;
     }
 
     @Override
@@ -97,7 +96,8 @@ public class Users {
                 ", password='" + password + '\'' +
                 ", isActive=" + isActive +
                 ", registrationDate=" + registrationDate +
-                ", usersType=" + usersType +
+                ", userTypeId=" + userTypeId +
                 '}';
     }
+
 }

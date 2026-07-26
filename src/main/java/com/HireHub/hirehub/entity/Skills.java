@@ -8,11 +8,11 @@ public class Skills {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     private String name;
     private String experienceLevel;
-    private String yearOdExperience;
+    private String yearsOfExperience;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "job_seeker_profile")
@@ -21,19 +21,19 @@ public class Skills {
     public Skills() {
     }
 
-    public Skills(int id, String name, String experienceLevel, String yearOdExperience, JobSeekerProfile jobSeekerProfile) {
+    public Skills(Integer id, String name, String experienceLevel, String yearsOfExperience, JobSeekerProfile jobSeekerProfile) {
         this.id = id;
         this.name = name;
         this.experienceLevel = experienceLevel;
-        this.yearOdExperience = yearOdExperience;
+        this.yearsOfExperience = yearsOfExperience;
         this.jobSeekerProfile = jobSeekerProfile;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -53,12 +53,12 @@ public class Skills {
         this.experienceLevel = experienceLevel;
     }
 
-    public String getYearOdExperience() {
-        return yearOdExperience;
+    public String getYearsOfExperience() {
+        return yearsOfExperience;
     }
 
-    public void setYearOdExperience(String yearOdExperience) {
-        this.yearOdExperience = yearOdExperience;
+    public void setYearsOfExperience(String yearsOfExperience) {
+        this.yearsOfExperience = yearsOfExperience;
     }
 
     public JobSeekerProfile getJobSeekerProfile() {
@@ -75,7 +75,7 @@ public class Skills {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", experienceLevel='" + experienceLevel + '\'' +
-                ", yearOdExperience='" + yearOdExperience + '\'' +
+                ", yearsOfExperience='" + yearsOfExperience + '\'' +
                 ", jobSeekerProfile=" + jobSeekerProfile +
                 '}';
     }

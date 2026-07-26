@@ -20,7 +20,7 @@ public class CustmUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UsersType usersType= user.getUsersType();
+        UsersType usersType= user.getUserTypeId();
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(usersType.getUserTypeName()));
         return authorities;

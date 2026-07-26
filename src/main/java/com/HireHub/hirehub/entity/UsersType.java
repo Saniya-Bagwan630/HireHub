@@ -1,10 +1,7 @@
 package com.HireHub.hirehub.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -13,16 +10,15 @@ public class UsersType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_type_id")
     private int userTypeId;
 
-    @Column(name = "user_type_name")
     private String userTypeName;
 
-    @OneToMany(targetEntity = Users.class, mappedBy = "usersType", cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Users.class, mappedBy = "userTypeId", cascade = CascadeType.ALL)
     private List<Users> users;
 
-    public UsersType(){}
+    public UsersType() {
+    }
 
     public UsersType(int userTypeId, String userTypeName, List<Users> users) {
         this.userTypeId = userTypeId;
