@@ -2,7 +2,8 @@ package com.HireHub.hirehub.services;
 
 import com.HireHub.hirehub.entity.*;
 import com.HireHub.hirehub.repository.JobPostActivityRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.HireHub.hirehub.repository.JobSeekerApplyRepository;
+import com.HireHub.hirehub.repository.JobSeekerSaveRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.Objects;
 
 @Service
 public class JobPostActivityService {
+
     private final JobPostActivityRepository jobPostActivityRepository;
 
     public JobPostActivityService(JobPostActivityRepository jobPostActivityRepository) {
@@ -49,5 +51,9 @@ public class JobPostActivityService {
     public List<JobPostActivity> search(String job, String location, List<String> type, List<String> remote, LocalDate searchDate) {
         return Objects.isNull(searchDate) ? jobPostActivityRepository.searchWithoutDate(job, location, remote,type) :
                 jobPostActivityRepository.search(job, location, remote, type, searchDate);
+    }
+
+    public void deleteJob(int id) {
+        jobPostActivityRepository.deleteById(id);
     }
 }
