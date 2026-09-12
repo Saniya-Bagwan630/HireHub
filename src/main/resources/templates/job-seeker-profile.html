@@ -234,9 +234,9 @@
                                         accept="application/pdf"
                                 />
                                 <input type="text" name="resume" th:field="*{resume}" class="form-control" hidden/>
-                                <a sec:authorize="hasAuthority('Recruiter')"
-                                   th:href="@{|/job-seeker-profile/downloadResume?fileName=${profile.resume}&&userID=${profile.userAccountId}|}">Download
-                                    Resume</a>
+                                 <a sec:authorize="hasAuthority('Recruiter')"
+                                    th:href="@{|/job-seeker-profile/downloadResume?fileName=${profile.resume}&userID=${profile.userAccountId}|}">Download
+                                     Resume</a>
                             </div>
                         </div>
 

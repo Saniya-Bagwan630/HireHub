@@ -204,12 +204,12 @@ public class JobPostActivityController {
             remotes.addAll(Arrays.asList("Remote-Only", "Office-Only", "Partial-Remote"));
         }
 
-        String searchJobParam = StringUtils.hasText(job) ? job.trim() : null;
-        String searchLocParam = StringUtils.hasText(location) ? location.trim() : null;
+        String searchJobParam = (StringUtils.hasText(job) && !job.trim().equalsIgnoreCase("null")) ? job.trim() : null;
+        String searchLocParam = (StringUtils.hasText(location) && !location.trim().equalsIgnoreCase("null")) ? location.trim() : null;
 
         List<JobPostActivity> jobPostList = jobPostActivityService.search(searchJobParam, searchLocParam, types, remotes, searchDate);
         if (jobPostList == null) {
-            jobPostList = Collections.emptyList();
+            jobPostList = new ArrayList<>();
         }
 
         model.addAttribute("jobPost", jobPostList);

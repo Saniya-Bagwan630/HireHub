@@ -8,6 +8,7 @@ import com.HireHub.hirehub.services.JobPostActivityService;
 import com.HireHub.hirehub.services.JobSeekerProfileService;
 import com.HireHub.hirehub.services.JobSeekerSaveService;
 import com.HireHub.hirehub.services.UsersService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -142,6 +143,64 @@ class JobSeekerSaveControllerTest {
 
         assertEquals("redirect:/dashboard/", view);
         verify(jobSeekerSaveService, never()).addNew(any(JobSeekerSave.class));
+    }
+
+    @Test
+    void unsaveShouldRemoveSavedJobForCandidate() {
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn("candidate@example.com");
+        when(auth.isAuthenticated()).thenReturn(true);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(securityContext);
+
+        Users user = new Users();
+        user.setUserId(10);
+
+        JobSeekerProfile seekerProfile = new JobSeekerProfile();
+        seekerProfile.setUserAccountId(10);
+
+        JobPostActivity job = new JobPostActivity();
+        job.setJobPostId(100);
+
+        when(usersService.getUserByEmail("candidate@example.com")).thenReturn(Optional.of(user));
+        when(jobSeekerProfileService.getOne(10)).thenReturn(Optional.of(seekerProfile));
+        when(jobPostActivityService.getOne(100)).thenReturn(job);
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getHeader("Referer")).thenReturn("http://localhost:8080/saved-jobs/");
+
+        String view = controller.unsave(100, request);
+
+        assertEquals("redirect:/saved-jobs/", view);
+        verify(jobSeekerSaveService).deleteSave(seekerProfile, job);
+    }
+
+    @Test
+    void unsaveShouldHandleAlreadyUnsavedOrInvalidJobSafely() {
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn("candidate@example.com");
+        when(auth.isAuthenticated()).thenReturn(true);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(securityContext);
+
+        Users user = new Users();
+        user.setUserId(10);
+
+        JobSeekerProfile seekerProfile = new JobSeekerProfile();
+        seekerProfile.setUserAccountId(10);
+
+        when(usersService.getUserByEmail("candidate@example.com")).thenReturn(Optional.of(user));
+        when(jobSeekerProfileService.getOne(10)).thenReturn(Optional.of(seekerProfile));
+        when(jobPostActivityService.getOne(999)).thenThrow(new RuntimeException("Job not found"));
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        String view = controller.unsave(999, request);
+
+        assertEquals("redirect:/saved-jobs/", view);
+        verify(jobSeekerSaveService, never()).deleteSave(any(), any());
     }
 
     @Test

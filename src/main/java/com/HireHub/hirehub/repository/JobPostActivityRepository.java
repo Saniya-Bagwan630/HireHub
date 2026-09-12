@@ -25,8 +25,8 @@ public interface JobPostActivityRepository extends JpaRepository<JobPostActivity
 
     @Query(value = "SELECT DISTINCT j.* FROM job_post_activity j " +
             "LEFT JOIN job_location l ON j.job_location_id = l.id " +
-            "WHERE (:job IS NULL OR :job = '' OR LOWER(j.job_title) LIKE LOWER(CONCAT('%', :job, '%'))) " +
-            "AND (:location IS NULL OR :location = '' OR LOWER(l.city) LIKE LOWER(CONCAT('%', :location, '%')) " +
+            "WHERE (COALESCE(:job, '') = '' OR LOWER(j.job_title) LIKE LOWER(CONCAT('%', :job, '%'))) " +
+            "AND (COALESCE(:location, '') = '' OR LOWER(l.city) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(l.country) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(l.state) LIKE LOWER(CONCAT('%', :location, '%'))) " +
             "AND (j.job_type IN (:type)) " +
@@ -38,8 +38,8 @@ public interface JobPostActivityRepository extends JpaRepository<JobPostActivity
 
     @Query(value = "SELECT DISTINCT j.* FROM job_post_activity j " +
             "LEFT JOIN job_location l ON j.job_location_id = l.id " +
-            "WHERE (:job IS NULL OR :job = '' OR LOWER(j.job_title) LIKE LOWER(CONCAT('%', :job, '%'))) " +
-            "AND (:location IS NULL OR :location = '' OR LOWER(l.city) LIKE LOWER(CONCAT('%', :location, '%')) " +
+            "WHERE (COALESCE(:job, '') = '' OR LOWER(j.job_title) LIKE LOWER(CONCAT('%', :job, '%'))) " +
+            "AND (COALESCE(:location, '') = '' OR LOWER(l.city) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(l.country) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(l.state) LIKE LOWER(CONCAT('%', :location, '%'))) " +
             "AND (j.job_type IN (:type)) " +

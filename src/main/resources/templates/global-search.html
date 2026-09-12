@@ -212,6 +212,9 @@
 
         <div class="box mt-3">
             <label class="large-label px-3 mb-3">Search Results</label>
+            <div th:if="${#lists.isEmpty(jobPost)}" class="text-center py-4">
+                <p class="text-muted fs-5">No jobs found matching your search criteria.</p>
+            </div>
             <th:block th:each="jobPost:${jobPost}">
                 <a th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}"
                    style=" text-decoration:none; color:black;">
@@ -230,11 +233,11 @@
                                 </label>
                             </div>
                             <div class="col-md-4 text-center">
-                                <label th:text="${jobPost.jobLocationId.city+', '+ jobPost.jobLocationId.state}">
+                                <label th:text="${jobPost.jobLocationId != null ? (jobPost.jobLocationId.city + ', ' + jobPost.jobLocationId.state) : ''}">
                                     City State</label>
                             </div>
                             <div class="col-md-4 text-right">
-                                <label th:text="@{${jobPost.jobCompanyId.name}}">Recruiter Company Name</label>
+                                <label th:text="${jobPost.jobCompanyId != null ? jobPost.jobCompanyId.name : ''}">Recruiter Company Name</label>
                             </div>
                         </div>
                     </div>

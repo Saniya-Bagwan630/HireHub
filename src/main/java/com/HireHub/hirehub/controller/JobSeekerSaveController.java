@@ -8,6 +8,7 @@ import com.HireHub.hirehub.services.JobPostActivityService;
 import com.HireHub.hirehub.services.JobSeekerProfileService;
 import com.HireHub.hirehub.services.JobSeekerSaveService;
 import com.HireHub.hirehub.services.UsersService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
 
 import java.util.*;
 
@@ -82,6 +84,54 @@ public class JobSeekerSaveController {
         }
 
         return "redirect:/dashboard/";
+    }
+
+    @GetMapping("job-details/unsave/{id}")
+    public String unsaveDirectAccess(@PathVariable("id") int id) {
+        return "redirect:/saved-jobs/";
+    }
+
+    @PostMapping("job-details/unsave/{id}")
+    public String unsave(@PathVariable("id") int id, HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
+        try {
+            String currentUsername = authentication.getName();
+            Optional<Users> userOpt = usersService.getUserByEmail(currentUsername);
+            if (userOpt.isEmpty()) {
+                return "redirect:/login";
+            }
+
+            Users user = userOpt.get();
+            Optional<JobSeekerProfile> seekerProfile = jobSeekerProfileService.getOne(user.getUserId());
+            if (seekerProfile.isEmpty()) {
+                return "redirect:/saved-jobs/";
+            }
+
+            JobPostActivity jobPostActivity = null;
+            try {
+                jobPostActivity = jobPostActivityService.getOne(id);
+            } catch (Exception e) {
+                return "redirect:/saved-jobs/";
+            }
+
+            if (jobPostActivity != null) {
+                JobSeekerProfile currentProfile = seekerProfile.get();
+                jobSeekerSaveService.deleteSave(currentProfile, jobPostActivity);
+            }
+        } catch (Exception e) {
+            return "redirect:/saved-jobs/";
+        }
+
+        String referer = request != null ? request.getHeader("Referer") : null;
+        if (referer != null && referer.contains("/job-details-apply/")) {
+            return "redirect:/job-details-apply/" + id;
+        }
+
+        return "redirect:/saved-jobs/";
     }
 
     @GetMapping("saved-jobs/")

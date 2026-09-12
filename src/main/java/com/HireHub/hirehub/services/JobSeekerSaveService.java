@@ -32,4 +32,9 @@ public class JobSeekerSaveService {
     public boolean alreadySaved(JobSeekerProfile userId, JobPostActivity job) {
         return jobSeekerSaveRepository.existsByUserIdAndJob(userId, job);
     }
+
+    public void deleteSave(JobSeekerProfile userId, JobPostActivity job) {
+        java.util.Optional<JobSeekerSave> seekerSave = jobSeekerSaveRepository.findByUserIdAndJob(userId, job);
+        seekerSave.ifPresent(jobSeekerSaveRepository::delete);
+    }
 }

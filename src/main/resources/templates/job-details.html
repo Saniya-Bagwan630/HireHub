@@ -177,12 +177,13 @@
                     </div>
                     <div class="col-md-3">
                         <form th:action="@{/job-details/save/{id}(id=${jobDetails.jobPostId})}" th:object="${applyJob}"
-                              method="post">
-                            <button class="btn-sec btn-black w-100" type="submit" th:if="${alreadySaved == false}">Save
-                                Job
-                            </button>
-                            <button class="btn-sec btn-black w-100" disabled th:if="${alreadySaved == true}">Already
-                                Saved
+                              method="post" th:if="${alreadySaved == false}">
+                            <button class="btn-sec btn-black w-100" type="submit">Save Job</button>
+                        </form>
+                        <form th:action="@{/job-details/unsave/{id}(id=${jobDetails.jobPostId})}"
+                              method="post" th:if="${alreadySaved == true}">
+                            <button class="btn-sec btn-outline-danger w-100" type="submit">
+                                <i class="fa-solid fa-bookmark-slash me-1"></i> Unsave Job
                             </button>
                         </form>
                     </div>

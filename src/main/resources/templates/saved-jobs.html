@@ -85,31 +85,39 @@
 
         <div class="box mt-3">
             <label class="large-label px-3 mb-3">Results</label>
+            <div th:if="${#lists.isEmpty(jobPost)}" class="text-center py-4">
+                <p class="text-muted fs-5">No saved jobs found.</p>
+            </div>
             <th:block th:each="jobPost:${jobPost}">
-                <a th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}"
-                   style=" text-decoration:none; color:black;">
-                    <div onclick="window.location=/job-details-apply/{id}(id=${jobPost.jobPostId})" class="job-row">
-                        <div class="row ">
-                            <div class="col-md-4">
-                                <label class="job-title text-left">
+                <div class="job-row">
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <a th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}" style="text-decoration:none; color:black;">
+                                <label class="job-title text-left" style="cursor: pointer;">
                                     [[${jobPost.jobTitle}]]
                                     <span class="title-span" sec:authorize="hasAuthority('Recruiter')"
                                           th:text="'('+ @{${jobPost.totalCandidates}}+' Candidates Applied)'">(xx candidates applied)</span>
                                     <span class="title-span" sec:authorize="hasAuthority('Job Seeker')"
                                           th:if="${jobPost.isActive == true}">(Applied)</span>
-
                                 </label>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <label th:text="${jobPost.jobLocationId.city+', '+ jobPost.jobLocationId.state}">
-                                    City State</label>
-                            </div>
-                            <div class="col-md-4 text-right">
-                                <label th:text="@{${jobPost.jobCompanyId.name}}">Recruiter Company Name</label>
-                            </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <label th:text="${jobPost.jobLocationId != null ? (jobPost.jobLocationId.city + ', ' + jobPost.jobLocationId.state) : ''}">
+                                City State</label>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <label th:text="${jobPost.jobCompanyId != null ? jobPost.jobCompanyId.name : ''}">Recruiter Company Name</label>
+                        </div>
+                        <div class="col-md-2 text-right" sec:authorize="hasAuthority('Job Seeker')">
+                            <form th:action="@{/job-details/unsave/{id}(id=${jobPost.jobPostId})}" method="post">
+                                <button type="submit" class="btn btn-outline-danger btn-sm px-3">
+                                    <i class="fa-solid fa-trash-can me-1"></i> Remove
+                                </button>
+                            </form>
                         </div>
                     </div>
-                </a>
+                </div>
             </th:block>
         </div>
 
