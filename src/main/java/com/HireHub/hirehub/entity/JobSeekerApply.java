@@ -28,6 +28,7 @@ public class JobSeekerApply implements Serializable {
     private Date applyDate;
 
     private String coverLetter;
+    private String resume;
 
     public JobSeekerApply() {
     }
@@ -80,6 +81,17 @@ public class JobSeekerApply implements Serializable {
         this.coverLetter = coverLetter;
     }
 
+    public String getResume() {
+        if (resume == null || resume.isBlank()) {
+            return userId != null ? userId.getResume() : null;
+        }
+        return resume;
+    }
+
+    public void setResume(String resume) {
+        this.resume = resume;
+    }
+
     @Override
     public String toString() {
         return "JobSeekerApply{" +
@@ -88,6 +100,7 @@ public class JobSeekerApply implements Serializable {
                 ", job=" + job +
                 ", applyDate=" + applyDate +
                 ", coverLetter='" + coverLetter + '\'' +
+                ", resume='" + resume + '\'' +
                 '}';
     }
 }

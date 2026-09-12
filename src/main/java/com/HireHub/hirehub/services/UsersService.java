@@ -36,21 +36,43 @@ public class UsersService {
     }
 
     public Users addNew(Users users) {
+        return addNew(users, null, null, null, null, null, null, null, null);
+    }
+
+    public Users addNew(Users users, String firstName, String lastName, String city, String state, String country,
+                        String company, String workAuthorization, String employmentType) {
         users.setActive(true);
         users.setRegistrationDate(new Date(System.currentTimeMillis()));
         users.setPassword(passwordEncoder.encode(users.getPassword()));
         Users savedUser = usersRepository.save(users);
-        int userTypeId = users.getUserTypeId().getUserTypeId();
+        int userTypeId = (users.getUserTypeId() != null) ? users.getUserTypeId().getUserTypeId() : 2;
 
         if (userTypeId == 1) {
-            recruiterProfileRepository.save(new RecruiterProfile(savedUser));
-        }
-        else {
-            jobSeekerProfileRepository.save(new JobSeekerProfile(savedUser));
+            RecruiterProfile recruiterProfile = recruiterProfileRepository.findById(savedUser.getUserId())
+                    .orElse(new RecruiterProfile(savedUser));
+            recruiterProfile.setFirstName(firstName);
+            recruiterProfile.setLastName(lastName);
+            recruiterProfile.setCity(city);
+            recruiterProfile.setState(state);
+            recruiterProfile.setCountry(country);
+            recruiterProfile.setCompany(company);
+            recruiterProfileRepository.save(recruiterProfile);
+        } else {
+            JobSeekerProfile jobSeekerProfile = jobSeekerProfileRepository.findById(savedUser.getUserId())
+                    .orElse(new JobSeekerProfile(savedUser));
+            jobSeekerProfile.setFirstName(firstName);
+            jobSeekerProfile.setLastName(lastName);
+            jobSeekerProfile.setCity(city);
+            jobSeekerProfile.setState(state);
+            jobSeekerProfile.setCountry(country);
+            jobSeekerProfile.setWorkAuthorization(workAuthorization);
+            jobSeekerProfile.setEmploymentType(employmentType);
+            jobSeekerProfileRepository.save(jobSeekerProfile);
         }
 
         return savedUser;
     }
+
 
     public Object getCurrentUserProfile() {
 

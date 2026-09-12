@@ -137,18 +137,28 @@
 
             <div class="px-3 mb-3" sec:authorize="hasAuthority('Recruiter')">
                 <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-md-8">
                         <label class="large-label "> Job Description </label>
                         <div th:utext="${jobDetails.descriptionOfJob}"></div>
                     </div>
-                    <div class="col-md-3 centerCandidate">
+                    <div class="col-md-4">
                         <div class="candidatesApplied">
-                            <label>Candidates Applied for Job</label>
+                            <label class="font-weight-bold mb-2">Candidates Applied for Job</label>
                             <th:block th:each="applyList:${applyList}">
-                                <a th:href="@{/job-seeker-profile/{id}(id=${applyList.userId.userAccountId})}"
-                                   class="white"
-                                   th:text="${applyList.userId.firstName+', '+applyList.userId.lastName}">FirstName,
-                                    LastName</a>
+                                <div class="mb-2 p-2 rounded" style="background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                                    <div>
+                                        <a th:href="@{/job-seeker-profile/{id}(id=${applyList.userId.userAccountId})}"
+                                           class="fw-bold text-dark text-decoration-none"
+                                           th:text="${applyList.userId.firstName+' '+applyList.userId.lastName}">FirstName,
+                                            LastName</a>
+                                    </div>
+                                    <div class="mt-1" th:if="${applyList.resume != null && !applyList.resume.isBlank()}">
+                                        <a class="btn btn-sm btn-outline-danger py-0 px-2"
+                                           th:href="@{|/job-seeker-profile/downloadResume?fileName=${applyList.resume}&userID=${applyList.userId.userAccountId}|}">
+                                            <i class="fa-solid fa-file-arrow-down me-1"></i> Download Resume
+                                        </a>
+                                    </div>
+                                </div>
                             </th:block>
                         </div>
                     </div>
@@ -158,15 +168,12 @@
             <div class="mt-3 px-3" sec:authorize="hasAuthority('Job Seeker')">
                 <div class="row">
                     <div class="col-md-3">
-                        <form th:action="@{/job-details/apply/{id}(id=${jobDetails.jobPostId})}" th:object="${applyJob}"
-                              method="post">
-                            <button class="btn-sec btn-red w-100" type="submit" th:if="${alreadyApplied == false}">Apply
-                                Now
-                            </button>
-                            <button class="btn-sec btn-red w-100" disabled th:if="${alreadyApplied == true}">Already
-                                Applied
-                            </button>
-                        </form>
+                        <button class="btn-sec btn-red w-100" type="button" data-bs-toggle="modal" data-bs-target="#applyModal" th:if="${alreadyApplied == false}">
+                            Apply Now
+                        </button>
+                        <button class="btn-sec btn-red w-100" disabled th:if="${alreadyApplied == true}">
+                            Already Applied
+                        </button>
                     </div>
                     <div class="col-md-3">
                         <form th:action="@{/job-details/save/{id}(id=${jobDetails.jobPostId})}" th:object="${applyJob}"
@@ -178,6 +185,53 @@
                                 Saved
                             </button>
                         </form>
+                    </div>
+                </div>
+
+                <!-- Apply Modal -->
+                <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true" th:if="${alreadyApplied == false}">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title font-weight-bold" id="applyModalLabel">Apply for [[${jobDetails.jobTitle}]]</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form th:action="@{/job-details/apply/{id}(id=${jobDetails.jobPostId})}" method="post" enctype="multipart/form-data">
+                                <div class="modal-body text-start">
+                                    <label class="font-weight-bold mb-2">Resume Selection Options:</label>
+
+                                    <div class="form-check mb-2" th:if="${user != null && user.resume != null && !user.resume.isBlank()}">
+                                        <input class="form-check-input" type="radio" name="resumeOption" id="optionExisting" value="existing" checked onclick="toggleResumeInput(false)">
+                                        <label class="form-check-label" for="optionExisting">
+                                            <strong>Continue with Existing Resume:</strong> <span th:text="${user.resume}">resume.pdf</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="resumeOption" id="optionUpload" value="upload"
+                                               th:checked="${user == null || user.resume == null || user.resume.isBlank()}"
+                                               onclick="toggleResumeInput(true)">
+                                        <label class="form-check-label" for="optionUpload">
+                                            <strong>Upload New Resume</strong> (PDF, DOC, DOCX - max 10MB)
+                                        </label>
+                                    </div>
+
+                                    <div id="newResumeSection" class="mt-3" th:style="${user != null && user.resume != null && !user.resume.isBlank()} ? 'display: none;' : 'display: block;'">
+                                        <label for="resumeFile" class="form-label font-weight-bold">Select Resume File</label>
+                                        <input class="form-control" type="file" id="resumeFile" name="resumeFile" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" th:required="${user == null || user.resume == null || user.resume.isBlank()}">
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <label for="coverLetter" class="form-label font-weight-bold">Cover Letter / Note (Optional)</label>
+                                        <textarea class="form-control" id="coverLetter" name="coverLetter" rows="3" placeholder="Add a short note or cover letter..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-danger">Confirm & Submit Application</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -208,10 +262,22 @@
 <script type="text/javascript" th:src="@{/js/main.js}"></script>
 <script>
     var element = document.getElementById('back-link');
-    element.setAttribute('href', document.referrer);
-    element.onclick = function() {
-      history.back();
-      return false;
+    if (element) {
+        element.setAttribute('href', document.referrer);
+        element.onclick = function() {
+          history.back();
+          return false;
+        }
+    }
+
+    function toggleResumeInput(showUpload) {
+        if (showUpload) {
+            $('#newResumeSection').show();
+            $('#resumeFile').prop('required', true);
+        } else {
+            $('#newResumeSection').hide();
+            $('#resumeFile').prop('required', false);
+        }
     }
 </script>
 </body>
