@@ -1,238 +1,155 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link
-            th:rel="stylesheet"
-            th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "
-    />
-    <link
-            rel="stylesheet"
-            type="text/css"
-            media="all"
-            th:href="@{/css/font-awesome.min.css}"
-    />
-    <link
-            rel="stylesheet"
-            type="text/css"
-            media="all"
-            th:href="@{/css/styles.css}"
-    />
-    <link
-            href="https://fonts.googleapis.com/css?family=Montserrat"
-            rel="stylesheet"
-    />
-    <meta charset="ISO-8859-1"/>
-    <title>Sign Up</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Create Account - HireHub</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"/>
 </head>
 
-<body>
-<section class="content hidden-overflow">
-    <div class="row">
-        <div class="col-6 coffee_mug_background">
-            <div class="logo_left mt-3 pt-4 ms-5 pl-5">
-                <h2 class="logo" style="color: white">
-                    hotdevjobs <span class="logo_com">.com</span>
-                </h2>
+<body class="bg-light">
+<div class="container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+        <!-- Left Banner -->
+        <div class="col-lg-5 coffee_mug_background d-none d-lg-flex flex-column justify-content-between p-5">
+            <div>
+                <a th:href="@{/}" class="text-white text-decoration-none fw-bold fs-3 d-inline-flex align-items-center gap-2">
+                    <i class="fa-solid fa-briefcase text-primary fs-2"></i>
+                    <span>Hire<span class="logo_com">Hub</span></span>
+                </a>
             </div>
-        </div>
-        <div class="col-6">
-            <div style="margin-top: 5%;">
-                <div>
-                    <div class="d-flex justify-content-center mb-3">
-                        <h1 class="heading_font font-weight-bold">
-                            Create User Account
-                        </h1>
+            <div class="my-auto py-5">
+                <h1 class="display-5 fw-bold mb-3">Join Thousands of Professionals on HireHub</h1>
+                <p class="fs-5 text-light-subtle">Whether you're looking for your next career move or searching for top-tier candidates, HireHub gives you the tools to succeed.</p>
+                <div class="d-flex flex-column gap-3 mt-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-white text-primary rounded-circle p-2 fs-5"><i class="fa-solid fa-user-check"></i></div>
+                        <span class="fs-6">Fast & Easy Profile Setup</span>
                     </div>
-                    <div class="myForm">
-                        <form
-                                th:action="@{/register/new}"
-                                th:object="${user}"
-                                method="post"
-                        >
-                            <div th:if="${error}" class="alert alert-danger mb-3" th:text="${error}"></div>
-
-                            <div class="box-body bozero mx2p">
-                                <div class="row">
-                                    <div class="col-md-6 pr-1">
-                                        <div class="form-group mb-2">
-                                            <input
-                                                    placeholder="First Name *"
-                                                    id="firstName"
-                                                    name="firstName"
-                                                    th:value="${firstName}"
-                                                    type="text"
-                                                    class="form-control"
-                                                    required
-                                            />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 pl-1">
-                                        <div class="form-group mb-2">
-                                            <input
-                                                    placeholder="Last Name *"
-                                                    id="lastName"
-                                                    name="lastName"
-                                                    th:value="${lastName}"
-                                                    type="text"
-                                                    class="form-control"
-                                                    required
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group mb-2">
-                                            <input
-                                                    placeholder="Email *"
-                                                    name="email"
-                                                    th:field="*{email}"
-                                                    type="email"
-                                                    style="width: 100%"
-                                                    class="form-control"
-                                                    required
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group mb-2">
-                                            <input
-                                                    minlength="8"
-                                                    placeholder="Password (min 8 chars) *"
-                                                    name="password"
-                                                    th:field="*{password}"
-                                                    type="password"
-                                                    class="form-control pwd"
-                                                    required
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-4 pr-1">
-                                        <div class="form-group mb-2">
-                                            <input
-                                                    placeholder="City"
-                                                    id="city"
-                                                    name="city"
-                                                    th:value="${city}"
-                                                    type="text"
-                                                    class="form-control"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 px-1">
-                                        <div class="form-group mb-2">
-                                            <input
-                                                    placeholder="State"
-                                                    id="state"
-                                                    name="state"
-                                                    th:value="${state}"
-                                                    type="text"
-                                                    class="form-control"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 pl-1">
-                                        <div class="form-group mb-2">
-                                            <input
-                                                    placeholder="Country"
-                                                    id="country"
-                                                    name="country"
-                                                    th:value="${country}"
-                                                    type="text"
-                                                    class="form-control"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-12 form-group mb-2">
-                                        <select
-                                                required
-                                                class="form-control"
-                                                th:field="*{userTypeId}"
-                                                id="userTypeIdSelect"
-                                        >
-                                            <th:block th:each="userType :${getAllTypes}">
-                                                <option
-                                                        th:text="${userType.userTypeName}"
-                                                        th:value="${userType.userTypeId}"
-                                                ></option>
-                                            </th:block>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Recruiter Specific Fields -->
-                                <div id="recruiterFields" class="row" style="display: none;">
-                                    <div class="col-md-12 form-group mb-2">
-                                        <input
-                                                placeholder="Company Name"
-                                                id="company"
-                                                name="company"
-                                                th:value="${company}"
-                                                type="text"
-                                                class="form-control"
-                                        />
-                                    </div>
-                                </div>
-
-                                <!-- Job Seeker Specific Fields -->
-                                <div id="jobSeekerFields" class="row" style="display: none;">
-                                    <div class="col-md-6 pr-1 form-group mb-2">
-                                        <select
-                                                class="form-control"
-                                                id="workAuthorization"
-                                                name="workAuthorization"
-                                                th:value="${workAuthorization}"
-                                        >
-                                            <option value="" th:selected="${workAuthorization == null || workAuthorization == ''}">Work Authorization</option>
-                                            <option value="US Citizen" th:selected="${workAuthorization == 'US Citizen'}">US Citizen</option>
-                                            <option value="Canadian Citizen" th:selected="${workAuthorization == 'Canadian Citizen'}">Canadian Citizen</option>
-                                            <option value="Green Card" th:selected="${workAuthorization == 'Green Card'}">Green Card</option>
-                                            <option value="H1 Visa" th:selected="${workAuthorization == 'H1 Visa'}">H1 Visa</option>
-                                            <option value="TN Permit" th:selected="${workAuthorization == 'TN Permit'}">TN Permit</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 pl-1 form-group mb-2">
-                                        <select
-                                                class="form-control"
-                                                id="employmentType"
-                                                name="employmentType"
-                                                th:value="${employmentType}"
-                                        >
-                                            <option value="" th:selected="${employmentType == null || employmentType == ''}">Seeking Employment</option>
-                                            <option value="Full-Time" th:selected="${employmentType == 'Full-Time'}">Full-time</option>
-                                            <option value="Part-Time" th:selected="${employmentType == 'Part-Time'}">Part-time</option>
-                                            <option value="Freelance" th:selected="${employmentType == 'Freelance'}">Freelance</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box-footer">
-                                <div class="row">
-                                    <div class="form-group mt-3 col-md-12">
-                                        <button type="submit" class="myBtn py-3">Register Account</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-white text-primary rounded-circle p-2 fs-5"><i class="fa-solid fa-building"></i></div>
+                        <span class="fs-6">Direct Employer & Candidate Connections</span>
                     </div>
                 </div>
             </div>
+            <div class="small text-muted">
+                &copy; 2026 HireHub. All rights reserved.
+            </div>
+        </div>
+
+        <!-- Right Registration Form -->
+        <div class="col-lg-7 d-flex align-items-center justify-content-center p-4">
+            <div class="card border-0 shadow-sm p-4 p-md-5 rounded-4 w-100" style="max-width: 620px; background: white;">
+                <div class="text-center mb-4">
+                    <a th:href="@{/}" class="text-dark text-decoration-none fw-bold fs-3 d-inline-flex align-items-center gap-2 d-lg-none mb-3">
+                        <i class="fa-solid fa-briefcase text-primary fs-3"></i>
+                        <span>Hire<span class="logo_com">Hub</span></span>
+                    </a>
+                    <h2 class="fw-bold fs-3 text-dark">Create Account</h2>
+                    <p class="text-muted small">Provide your basic profile details to register on HireHub</p>
+                </div>
+
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show text-center small mb-4" role="alert" th:text="${error}">
+                </div>
+
+                <form th:action="@{/register/new}" th:object="${user}" method="post">
+                    <!-- Account Role Selection -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-dark">I am registering as *</label>
+                        <select required class="form-select form-select-lg fs-6" th:field="*{userTypeId}" id="userTypeIdSelect">
+                            <th:block th:each="userType :${getAllTypes}">
+                                <option th:text="${userType.userTypeName}" th:value="${userType.userTypeId}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <!-- Personal Information -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-dark">First Name *</label>
+                            <input placeholder="John" id="firstName" name="firstName" th:value="${firstName}" type="text" class="form-control" required/>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-dark">Last Name *</label>
+                            <input placeholder="Doe" id="lastName" name="lastName" th:value="${lastName}" type="text" class="form-control" required/>
+                        </div>
+                    </div>
+
+                    <!-- Credentials -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-dark">Email Address *</label>
+                        <input placeholder="john.doe@example.com" name="email" th:field="*{email}" type="email" class="form-control" required/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-dark">Password (min 8 characters) *</label>
+                        <input minlength="8" placeholder="Create strong password" name="password" th:field="*{password}" type="password" class="form-control" required/>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-dark">City</label>
+                            <input placeholder="City" id="city" name="city" th:value="${city}" type="text" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-dark">State</label>
+                            <input placeholder="State" id="state" name="state" th:value="${state}" type="text" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-dark">Country</label>
+                            <input placeholder="Country" id="country" name="country" th:value="${country}" type="text" class="form-control"/>
+                        </div>
+                    </div>
+
+                    <!-- Recruiter Specific Fields -->
+                    <div id="recruiterFields" class="mb-3" style="display: none;">
+                        <label class="form-label small fw-bold text-dark">Company Name</label>
+                        <input placeholder="TechCorp Inc." id="company" name="company" th:value="${company}" type="text" class="form-control"/>
+                    </div>
+
+                    <!-- Job Seeker Specific Fields -->
+                    <div id="jobSeekerFields" class="row g-2 mb-3" style="display: none;">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-dark">Work Authorization</label>
+                            <select class="form-select" id="workAuthorization" name="workAuthorization" th:value="${workAuthorization}">
+                                <option value="" th:selected="${workAuthorization == null || workAuthorization == ''}">Work Authorization</option>
+                                <option value="US Citizen" th:selected="${workAuthorization == 'US Citizen'}">US Citizen</option>
+                                <option value="Canadian Citizen" th:selected="${workAuthorization == 'Canadian Citizen'}">Canadian Citizen</option>
+                                <option value="Green Card" th:selected="${workAuthorization == 'Green Card'}">Green Card</option>
+                                <option value="H1 Visa" th:selected="${workAuthorization == 'H1 Visa'}">H1 Visa</option>
+                                <option value="TN Permit" th:selected="${workAuthorization == 'TN Permit'}">TN Permit</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-dark">Employment Type</label>
+                            <select class="form-select" id="employmentType" name="employmentType" th:value="${employmentType}">
+                                <option value="" th:selected="${employmentType == null || employmentType == ''}">Seeking Employment</option>
+                                <option value="Full-Time" th:selected="${employmentType == 'Full-Time'}">Full-time</option>
+                                <option value="Part-Time" th:selected="${employmentType == 'Part-Time'}">Part-time</option>
+                                <option value="Freelance" th:selected="${employmentType == 'Freelance'}">Freelance</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2.5 fw-bold rounded-3 shadow-sm mb-4">
+                        <i class="fa-solid fa-user-plus me-2"></i> Register Account
+                    </button>
+
+                    <div class="text-center text-muted small">
+                        Already have an account?
+                        <a th:href="@{/login}" class="fw-bold text-primary text-decoration-none">Sign In Here</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</section>
-</body>
+</div>
 
 <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script>
     function toggleRoleFields() {
         var select = document.getElementById("userTypeIdSelect");
@@ -244,7 +161,7 @@
         var selectedText = select.options[select.selectedIndex] ? select.options[select.selectedIndex].text.toLowerCase() : "";
 
         if (selectedValue === "1" || selectedText.includes("recruiter")) {
-            recruiterDiv.style.display = "flex";
+            recruiterDiv.style.display = "block";
             jobSeekerDiv.style.display = "none";
         } else {
             recruiterDiv.style.display = "none";
@@ -260,4 +177,5 @@
         }
     });
 </script>
+</body>
 </html>

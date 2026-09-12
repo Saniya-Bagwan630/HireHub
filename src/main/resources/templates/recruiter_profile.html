@@ -1,95 +1,198 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org/" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
-    <link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/font-awesome.min.css}" />
-    <link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/style.css}" />
-    <link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/styles.css}" />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Profile Setup</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Recruiter Profile - HireHub</title>
+    
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
 </head>
 
-<body>
-<div class="row" style="margin-right:0">
-    <div class="col-5 coffee_mug_background">
-        <div class="logo_left mt-3 pt-4 ms-5 pl-5">
-            <h2 class="logo" style="color: white">hotdevjobs <span class="logo_com">.com</span></h2>
+<body class="bg-light min-vh-100 d-flex flex-column">
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top hh-navbar shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/dashboard/}">
+                <i class="fa-solid fa-briefcase me-2 text-primary fs-4"></i>
+                <span class="fw-bold fs-4 text-white">Hire<span class="text-primary">Hub</span></span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" th:href="@{/dashboard/}"><i class="fa-solid fa-house me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" th:href="@{/global-search/}"><i class="fa-solid fa-magnifying-glass me-1"></i> Find Jobs</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAuthority('Job Seeker')">
+                        <a class="nav-link fw-medium" th:href="@{/saved-jobs/}"><i class="fa-solid fa-bookmark me-1"></i> Saved Jobs</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAuthority('Recruiter')">
+                        <a class="nav-link fw-medium" th:href="@{/dashboard/add}"><i class="fa-solid fa-plus-circle me-1"></i> Post Job</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-circle-user fs-4 text-primary"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+                            <li sec:authorize="hasAuthority('Job Seeker')">
+                                <a class="dropdown-item py-2 fw-medium" th:href="@{/job-seeker-profile/}"><i class="fa-solid fa-user me-2 text-primary"></i> Edit Profile</a>
+                            </li>
+                            <li sec:authorize="hasAuthority('Recruiter')">
+                                <a class="dropdown-item py-2 fw-medium active" th:href="@{/recruiter-profile/}"><i class="fa-solid fa-user me-2 text-primary"></i> Edit Profile</a>
+                            </li>
+                            <li><hr class="dropdown-divider my-1"></li>
+                            <li>
+                                <a class="dropdown-item py-2 text-danger fw-medium" th:href="@{/logout}"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-    <div class=" col-7">
-        <div class="myForm">
-            <form th:action="@{/recruiter-profile/addNew}" th:object="${profile}" method="post" enctype="multipart/form-data"
-            >
-                <div class="row gutters ">
-                    <div class="row mt-5">
-                        <div class="col-md-12">
-                            <div class="d-flex justify-content-center ">
-                                <h1 class="heading_font font-weight-bold">
-                                    Recruiter
-                                </h1>
+    </nav>
+
+    <!-- Page Content Container -->
+    <main class="container py-4 flex-grow-1">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-xl-8">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-header bg-dark text-white p-4 d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 52px; height: 52px;">
+                                <i class="fa-solid fa-building-user fs-4"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0 fw-bold text-white">Recruiter Profile Setup</h4>
+                                <p class="text-white-50 mb-0 small">Manage your hiring profile and company information</p>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div >
-                                    <h2 class="d-flex justify-content-center heading_font">
-                                        Set up your Profile
-                                    </h2>
+                        <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-2 rounded-pill fw-semibold">
+                            <i class="fa-solid fa-user-tie me-1"></i> Recruiter
+                        </span>
+                    </div>
+
+                    <div class="card-body p-4 p-md-5">
+                        <form th:action="@{/recruiter-profile/addNew}" th:object="${profile}" method="post" enctype="multipart/form-data">
+                            
+                            <!-- Personal Information -->
+                            <div class="mb-4">
+                                <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
+                                    <i class="fa-solid fa-id-card me-2 text-primary"></i>Recruiter Details
+                                </h5>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="firstName" class="form-label fw-semibold text-secondary">First Name <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light"><i class="fa-solid fa-user text-muted"></i></span>
+                                            <input placeholder="First Name" id="firstName" th:field="*{firstName}" name="firstName" type="text" class="form-control" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lastName" class="form-label fw-semibold text-secondary">Last Name <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light"><i class="fa-solid fa-user text-muted"></i></span>
+                                            <input placeholder="Last Name" id="lastName" name="lastName" th:field="*{lastName}" type="text" class="form-control" required />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="card-body ms-2.5">
-                                <label class="heading_font font_sub_heading_color">Name</label>
-                                <div class="row ">
-                                    <div class="col-md-6 pr-1">
-                                        <input placeholder="First Name" id="firstName" th:field="*{firstName}"  name="firstName"  type="text" class="form-control"  />
+                            <!-- Location Information -->
+                            <div class="mb-4">
+                                <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
+                                    <i class="fa-solid fa-location-dot me-2 text-primary"></i>Location
+                                </h5>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold text-secondary">City</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light"><i class="fa-solid fa-city text-muted"></i></span>
+                                            <input placeholder="City" name="city" th:field="*{city}" type="text" class="form-control" />
+                                        </div>
                                     </div>
-                                    <div class="col-md-6 pl-1">
-                                        <input placeholder="Last Name" id="lastName" name="lastName" th:field="*{lastName}" type="text" class="form-control"  />
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold text-secondary">State / Province</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light"><i class="fa-solid fa-map text-muted"></i></span>
+                                            <input placeholder="State" name="state" type="text" th:field="*{state}" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold text-secondary">Country</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light"><i class="fa-solid fa-globe text-muted"></i></span>
+                                            <input placeholder="Country" name="country" th:field="*{country}" type="text" class="form-control" />
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row " >
-                                    <div class="col-md-4 pr-1">
-                                        <input placeholder="City" name="city" th:field="*{city}" type="text" class="form-control"  />
-                                    </div>
-                                    <div class="col-md-4 px-1">
-                                        <input placeholder="State" name="state" type="text" th:field="*{state}" class="form-control"  />
-                                    </div>
-                                    <div class="col-md-4 pl-1">
-                                        <input placeholder="Country" name="country" th:field="*{country}" type="text" class="form-control"  />
-                                    </div>
-                                </div>
-                                <div class="row " >
-                                    <div class="col">
-                                        <input placeholder="Company" id="company" name="company" th:field="*{company}" type="text" class="form-control"  />
-                                    </div>
-                                </div>
-                                <label class="heading_font font_sub_heading_color mt-2">Profile Photo</label>
-                                <div class="row" >
+                            </div>
 
-                                    <div class="col" >
+                            <!-- Company Information -->
+                            <div class="mb-4">
+                                <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
+                                    <i class="fa-solid fa-building me-2 text-primary"></i>Company Information
+                                </h5>
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="company" class="form-label fw-semibold text-secondary">Company / Organization Name <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light"><i class="fa-solid fa-building text-muted"></i></span>
+                                            <input placeholder="Company Name" id="company" name="company" th:field="*{company}" type="text" class="form-control" required />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profile Photo -->
+                            <div class="mb-4">
+                                <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
+                                    <i class="fa-solid fa-image me-2 text-primary"></i>Profile Photo
+                                </h5>
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold text-secondary">Upload Photo</label>
                                         <input type="file" name="image" class="form-control" accept="image/png, image/jpeg" />
                                         <input type="text" name="profilePhoto" th:field="*{profilePhoto}" class="form-control" hidden />
-                                    </div>
-                                </div>
-                                <div class="row mt-4" >
-                                    <div class="col d-flex justify-content-center">
-                                        <button type="submit" id="submit2" name="submit" class="btn btn-primary base_button px-4 py-2">Save</button>
+                                        <div class="form-text">Supported formats: PNG, JPEG. Max file size: 5MB.</div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-flex justify-content-end pt-3 border-top">
+                                <button type="submit" id="submit2" name="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm">
+                                    <i class="fa-solid fa-floppy-disk me-2"></i> Save Profile
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
-</body>
-<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/main.js}"></script>
+    </main>
 
+    <!-- Footer -->
+    <footer class="bg-dark text-white-50 py-4 mt-auto">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2026 HireHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+
+</body>
 </html>

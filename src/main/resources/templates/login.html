@@ -1,103 +1,98 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <link
-          rel="stylesheet"
-          type="text/css"
-          media="all"
-          th:href="@{/css/style.css}"
-  />
-  <link
-          th:rel="stylesheet"
-          th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "
-  />
-  <link
-          rel="stylesheet"
-          type="text/css"
-          media="all"
-          th:href="@{/css/font-awesome.min.css}"
-  />
-  <link
-          rel="stylesheet"
-          type="text/css"
-          media="all"
-          th:href="@{/css/styles.css}"
-  />
-  <meta charset="ISO-8859-1" />
-  <title>Login</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Sign In - HireHub</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"/>
 </head>
 
-<body>
-
-<div class="row" style="margin-right:0">
-  <div class="col-md-6">
-    <div class="coffee_mug_background">
-      <div class="logo_left mt-3 pt-4 ms-5 pl-5">
-        <h2 class="logo">hotdevjobs <span class="logo_com">.com</span></h2>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="myForm" style="align-items:center">
-      <form th:action="@{/login}" th:object="${user}" method="post">
-        <h1 class="text-center bold font-weight-bold mb-4">Login</h1>
-        <div class="form-group">
-          <input
-                  placeholder="Email"
-                  name="username"
-                  field="{email}"
-                  type="email"
-                  class="form-control"
-                  required
-          />
-        </div>
-        <div class="form-group">
-          <input
-                  placeholder="Password"
-                  name="password"
-                  field="{password}"
-                  type="password"
-                  class="form-control"
-                  required
-          />
-        </div>
-        <div class="clearfix mb-4">
-          <label class="float-left form-check-label"
-          ><input type="checkbox" /> Remember me</label
-          >
-          <a href="#" class="color-text float-right">Forgot Password?</a>
-        </div>
-        <div class="form-group">
-          <button type="submit" class="myBtn">Log in</button>
+<body class="bg-light">
+<div class="container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+        <!-- Left Banner -->
+        <div class="col-lg-6 coffee_mug_background d-none d-lg-flex flex-column justify-content-between p-5">
+            <div>
+                <a th:href="@{/}" class="text-white text-decoration-none fw-bold fs-3 d-inline-flex align-items-center gap-2">
+                    <i class="fa-solid fa-briefcase text-primary fs-2"></i>
+                    <span>Hire<span class="logo_com">Hub</span></span>
+                </a>
+            </div>
+            <div class="my-auto py-5">
+                <h1 class="display-5 fw-bold mb-3">Welcome Back to HireHub</h1>
+                <p class="fs-5 text-light-subtle">Log in to manage your candidate profile, track job applications, or manage candidate submissions for your company.</p>
+                <div class="d-flex flex-column gap-3 mt-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-white text-primary rounded-circle p-2 fs-5"><i class="fa-solid fa-check"></i></div>
+                        <span class="fs-6">Verified Employers & Active Listings</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-white text-primary rounded-circle p-2 fs-5"><i class="fa-solid fa-shield-halved"></i></div>
+                        <span class="fs-6">Protected & Secure Candidate Profile</span>
+                    </div>
+                </div>
+            </div>
+            <div class="small text-muted">
+                &copy; 2026 HireHub. All rights reserved.
+            </div>
         </div>
 
-        <p class="text-center">
-          Are you a new User?
-          <a
-                  class="color-text"
-                  href="#"
-                  th:href="@{/register}"
-          >
-            Register Now</a
-          >
-        </p>
-      </form>
+        <!-- Right Login Form -->
+        <div class="col-lg-6 d-flex align-items-center justify-content-center p-4">
+            <div class="card border-0 shadow-sm p-4 p-md-5 rounded-4 w-100" style="max-width: 460px; background: white;">
+                <div class="text-center mb-4">
+                    <a th:href="@{/}" class="text-dark text-decoration-none fw-bold fs-3 d-inline-flex align-items-center gap-2 d-lg-none mb-3">
+                        <i class="fa-solid fa-briefcase text-primary fs-3"></i>
+                        <span>Hire<span class="logo_com">Hub</span></span>
+                    </a>
+                    <h2 class="fw-bold fs-3 text-dark">Sign In</h2>
+                    <p class="text-muted small">Enter your credentials to access your account</p>
+                </div>
+
+                <!-- Alert Messages -->
+                <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show text-center small mb-4" role="alert">
+                    <i class="fa-solid fa-triangle-exclamation me-1"></i> Invalid email or password. Please try again.
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show text-center small mb-4" role="alert">
+                    <i class="fa-solid fa-circle-check me-1"></i> You have been logged out successfully.
+                </div>
+
+                <form th:action="@{/login}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-dark">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-envelope"></i></span>
+                            <input placeholder="name@example.com" name="username" type="email" class="form-control" required autofocus/>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label small fw-bold text-dark mb-0">Password</label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-lock"></i></span>
+                            <input placeholder="Enter password" name="password" type="password" class="form-control" required/>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2.5 fw-bold rounded-3 shadow-sm mb-4">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i> Log In
+                    </button>
+
+                    <div class="text-center text-muted small">
+                        Don't have an account yet?
+                        <a th:href="@{/register}" class="fw-bold text-primary text-decoration-none">Create an Account</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
+
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 </body>
-<script
-        type="text/javascript"
-        th:src="@{/webjars/jquery/jquery.min.js}"
-></script>
-<script
-        type="text/javascript"
-        th:src="@{/webjars/popper.js/umd/popper.min.js}"
-></script>
-<script
-        type="text/javascript"
-        th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"
-></script>
-<script type="text/javascript" th:src="@{/js/main.js}"></script>
 </html>
