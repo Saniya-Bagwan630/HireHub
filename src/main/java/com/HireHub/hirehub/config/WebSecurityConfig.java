@@ -49,12 +49,11 @@ public class WebSecurityConfig {
             auth.anyRequest().authenticated();
         });
 
-        http.formLogin(form->form.loginPage("/login").permitAll().successHandler(customAuthenticationSuccessHandler))
-                .logout(logout->{
+        http.formLogin(form -> form.loginPage("/login").permitAll().successHandler(customAuthenticationSuccessHandler))
+                .logout(logout -> {
                     logout.logoutUrl("/logout");
                     logout.logoutSuccessUrl("/");
-                }).cors(Customizer.withDefaults())
-                .csrf(csrf->csrf.disable());
+                }).cors(Customizer.withDefaults());
         return http.build();
     }
 

@@ -265,12 +265,13 @@
 <script type="text/javascript" th:src="@{/js/main.js}"></script>
 
 <script>
-
-    $('#job').change(function() {
-      $('#hidJob').val($(this).val());
+    $('#job, #loc').on('input change keyup', function() {
+      $('#hidJob').val($('#job').val());
+      $('#hidLoc').val($('#loc').val());
     });
-    $('#loc').change(function() {
-      $('#hidLoc').val($(this).val());
+    $('#myForm').on('submit', function() {
+      $('#hidJob').val($('#job').val());
+      $('#hidLoc').val($('#loc').val());
     });
 </script>
 </body>

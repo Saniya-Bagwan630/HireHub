@@ -35,35 +35,76 @@ public class JobSeekerSaveController {
         this.jobSeekerSaveService = jobSeekerSaveService;
     }
 
+    @GetMapping("job-details/save/{id}")
+    public String saveDirectAccess(@PathVariable("id") int id) {
+        return "redirect:/dashboard/";
+    }
+
     @PostMapping("job-details/save/{id}")
     public String save(@PathVariable("id") int id, JobSeekerSave jobSeekerSave) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            String currentUsername = authentication.getName();
-            Users user = usersService.findByEmail(currentUsername);
-            Optional<JobSeekerProfile> seekerProfile = jobSeekerProfileService.getOne(user.getUserId());
-            JobPostActivity jobPostActivity = jobPostActivityService.getOne(id);
-            if (seekerProfile.isPresent() && jobPostActivity != null) {
-                jobSeekerSave.setJob(jobPostActivity);
-                jobSeekerSave.setUserId(seekerProfile.get());
-            } else {
-                throw new RuntimeException("User not found");
-            }
-            jobSeekerSaveService.addNew(jobSeekerSave);
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken || !authentication.isAuthenticated()) {
+            return "redirect:/login";
         }
+
+        try {
+            String currentUsername = authentication.getName();
+            Optional<Users> userOpt = usersService.getUserByEmail(currentUsername);
+            if (userOpt.isEmpty()) {
+                return "redirect:/login";
+            }
+
+            Users user = userOpt.get();
+            Optional<JobSeekerProfile> seekerProfile = jobSeekerProfileService.getOne(user.getUserId());
+            if (seekerProfile.isEmpty()) {
+                return "redirect:/dashboard/";
+            }
+
+            JobPostActivity jobPostActivity = null;
+            try {
+                jobPostActivity = jobPostActivityService.getOne(id);
+            } catch (Exception e) {
+                return "redirect:/dashboard/";
+            }
+
+            if (jobPostActivity != null) {
+                JobSeekerProfile currentProfile = seekerProfile.get();
+                if (!jobSeekerSaveService.alreadySaved(currentProfile, jobPostActivity)) {
+                    JobSeekerSave newSave = new JobSeekerSave();
+                    newSave.setJob(jobPostActivity);
+                    newSave.setUserId(currentProfile);
+                    jobSeekerSaveService.addNew(newSave);
+                }
+            }
+        } catch (Exception e) {
+            return "redirect:/dashboard/";
+        }
+
         return "redirect:/dashboard/";
     }
 
     @GetMapping("saved-jobs/")
     public String savedJobs(Model model) {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
         List<JobPostActivity> jobPost = new ArrayList<>();
         Object currentUserProfile = usersService.getCurrentUserProfile();
 
-        List<JobSeekerSave> jobSeekerSaveList = jobSeekerSaveService.getCandidatesJob((JobSeekerProfile) currentUserProfile);
-        for (JobSeekerSave jobSeekerSave : jobSeekerSaveList) {
-            jobPost.add(jobSeekerSave.getJob());
+        if (currentUserProfile instanceof JobSeekerProfile seekerProfile) {
+            List<JobSeekerSave> jobSeekerSaveList = jobSeekerSaveService.getCandidatesJob(seekerProfile);
+            if (jobSeekerSaveList != null) {
+                for (JobSeekerSave jobSeekerSave : jobSeekerSaveList) {
+                    if (jobSeekerSave.getJob() != null) {
+                        jobSeekerSave.getJob().setIsSaved(true);
+                        jobPost.add(jobSeekerSave.getJob());
+                    }
+                }
+            }
         }
 
         model.addAttribute("jobPost", jobPost);

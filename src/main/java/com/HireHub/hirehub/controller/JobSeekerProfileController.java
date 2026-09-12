@@ -130,6 +130,15 @@ public class JobSeekerProfileController {
     @GetMapping("/downloadResume")
     public ResponseEntity<?> downloadResume(@RequestParam(value = "fileName") String fileName, @RequestParam(value = "userID") String userId) {
 
+        if (fileName == null || userId == null || fileName.isBlank() || userId.isBlank()) {
+            return ResponseEntity.badRequest().body("Invalid parameters");
+        }
+
+        if (userId.contains("..") || userId.contains("/") || userId.contains("\\") ||
+                fileName.contains("..") || fileName.contains("/") || fileName.contains("\\")) {
+            return ResponseEntity.badRequest().body("Invalid path parameters");
+        }
+
         FileDownloadUtil downloadUtil = new FileDownloadUtil();
         Resource resource = null;
 
@@ -139,7 +148,7 @@ public class JobSeekerProfileController {
             return ResponseEntity.badRequest().build();
         }
 
-        if (resource == null) {
+        if (resource == null || !resource.exists()) {
             return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
         }
 

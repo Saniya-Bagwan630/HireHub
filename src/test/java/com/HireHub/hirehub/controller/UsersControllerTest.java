@@ -27,14 +27,14 @@ class UsersControllerTest {
         recruiterType.setUserTypeId(1);
         recruiterType.setUserTypeName("Recruiter");
 
-        when(usersTypeService.getById(1)).thenReturn(recruiterType);
-        when(usersService.getUserByEmail("candidate@example.com")).thenReturn(Optional.empty());
-
         Users user = new Users();
         user.setEmail("candidate@example.com");
         user.setPassword("Secret1234");
+        user.setUserTypeId(recruiterType);
 
-        String viewName = controller.userRegistration(user, 1, new ExtendedModelMap());
+        when(usersService.getUserByEmail("candidate@example.com")).thenReturn(Optional.empty());
+
+        String viewName = controller.userRegistration(user, new ExtendedModelMap());
 
         assertEquals("redirect:/dashboard/", viewName);
         verify(usersService).addNew(argThat(savedUser -> savedUser.getUserTypeId() != null
